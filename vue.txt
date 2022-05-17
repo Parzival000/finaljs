@@ -1,0 +1,144 @@
+v-bind
+ใช้สำหรับผูกค่า attribute กับค่าของ property ใน component เช่นตัวอย่าง
+
+<div id="app-2">
+     <span v-bind:title="message">
+       {{message}}
+     </span>
+   </div>
+ 
+   <script>
+     var app2 = new Vue({
+       el: "#app-2",
+       data: {
+         message: "You loaded this page on " + new Date().toLocaleString()
+       }
+     });
+   </script>
+**********************************************************************************************
+   v-for
+ใช้สำหรับวนค่าในลิส
+
+<div id="app-4">
+     <ol>
+       <li v-for="todo in todos">
+         {{ todo.text }}
+       </li>
+     </ol>
+   </div>
+ 
+   <script>
+     var app4 = new Vue({
+       el: "#app-4",
+       data: {
+         todos: [
+           { text: "Learn JavaScript" },
+           { text: "Learn Vue" },
+           { text: "Build something awesome" }
+         ]
+       }
+     });
+   </script>
+**********************************************************************************************
+   v-on
+ใช้สำหรับจัดการ event ที่เกิดขึ้นกับ element
+
+<div id="app-5">
+     <p>{{ message }}</p>
+     <button v-on:click="reverseMessage">Reverse Message</button>
+   </div>
+ 
+   <script>
+     var app5 = new Vue({
+       el: "#app-5",
+       data: {
+         message: "Hello Vue.js!"
+       },
+       methods: {
+         reverseMessage: function() {
+           this.message = this.message
+             .split("")
+             .reverse()
+             .join("");
+         }
+       }
+     });
+   </script>
+**********************************************************************************************
+v-if
+สำหรับการใช้ condition อันแรก คือ v-if (เรียกว่า directive) Vue จะทำการแสดงผลถ้า element นั้นๆ มี condition เป็น true และจะไม่แสดงผล ถ้าเป็น false เช่น เราเพิ่มข้อมูลเป็นดังนี้
+
+
+<div id="app">
+  <p v-if="isMe">Hey, I am here {{ message }}</p>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Ahoy Vue!',
+      isMe: true
+    }
+  })
+</script>
+**********************************************************************************************
+ส่วน Props คือการระบุว่า Component นั้นๆ สามารถรับค่าอะไรได้บ้าง เช่น เราสามารถส่งค่าจาก A ไป B ด้วยการส่งค่าผ่าน props นั่นเอง โดย B ต้องระบุ props ไว้ เช่น
+
+<script>
+  export default {
+    name: 'Test',
+    props: {
+      message: String
+    }
+  }
+</script>
+เป็นการบอกว่า component นี้รับ props ชื่อ message เป็น type แบบ String
+****************************************************************************************
+$emit() คือ อะไร ?
+$emit เป็นฟังก์ชั่นที่เรียกใช้งาน event ที่กำหนดไว้กับฟังก์ชั่น $on โดยเรียกใช้นั้นมีขอบเขตตั้งแต่ตัวเองขึ้นไป
+
+โดยมีโครงสร้างดังนี้
+
+$emit(ชื่อ event, argument ต่างๆ);
+ตัวอย่างการใช้งาน $emit และ $on
+เราจะทำตัวอย่างเพิ่มค่าโดยเรียกจากในส่วนที่ถูกใช้งาน ให้เกิดการเปลี่ยนแปลงที่ตัวมันกับแม่ของมัน
+
+ในไฟล์ js กำหนด ตัวแปร count ใน controller และฟังก์ชั่นในการเพิ่มค่า count เหมือนกับของ broadcast
+
+angular.module('application', [])
+    .controller('rootController', function ($scope) {
+        $scope.count = 0;
+        $scope.$on('addCount', function () {
+            $scope.count += 1;
+        });
+    })
+    .controller('branchController', function ($scope) {
+        $scope.count = 0;
+        $scope.$on('addCount', function () {
+            $scope.count += 2;
+        });
+    })
+    .controller('nodeController', function ($scope) {
+        $scope.count = 0;
+        $scope.$on('addCount', function () {
+            $scope.count += 3;
+        });
+    });
+***************************************************************************
+v-model เป็นพื้นฐานสำคัญของ Vue.js ที่ใช้เพื่อผูกข้อมูลกับตัวแปร เมื่อ user กรอกข้อมูลเข้ามาจะทำให้ตัวแปรที่ผูกนั้นได้รับ
+value จาก user ด้วย หรือในทางกลับกันถ้าหาก โค้ดของเราแก้ไขค่าตัวแปรนั้น user ก็จะเห็นค่าที่เปลี่ยนไปตามที่โค้ดเราเขียนเช่นกัน เรียกว่า "two-way data binding"
+v-model สามารถใช้งานได้กับ input พื้นฐานทั้งหมด ดูโค้ดตัวอย่างได้ตามนี้
+
+Input Text
+<input v-model="message" placeholder="edit me">
+<p>Message is: {{ message }}</p>
+
+จากตัวอย่างด้านบนเราผูก value กับตัวแปรชื่อ message ผ่าน v-model เมื่อ user กรอกข้อมูลเข้ามาที่ input ข้อความที่แสดงตรง <p> ก็จะอัพเดทตามไปด้วย
+
+ตัวอย่างอื่น ๆ
+
+Textarea
+<span>Multiline message is:</span>
+<p style="white-space: pre-line;">{{ message }}</p> <br>
+<textarea v-model="message" placeholder="add multiple lines"></textarea>
